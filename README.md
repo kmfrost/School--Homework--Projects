@@ -1,4 +1,4 @@
-ELEC3700
+School--Homework--Projects
 ========
 
-Matlab files for solving various Amplifier problems
+Matlab files for solving various homework and project files.
