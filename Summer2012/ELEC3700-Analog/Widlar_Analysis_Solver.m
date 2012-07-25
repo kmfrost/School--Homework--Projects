@@ -8,9 +8,9 @@ VT  = 0.02585;
 VCC = 9;
 R1  = 8.3e3;
 R2  = 12e3;
-Beta1 = 1e9;
+Beta1 = 1e9; % Assumption since Beta is BIG. In real life it wouldn't be that big.
 Beta2 = Beta1;
-IS1   = 1e-12;
+IS1   = 1e-12; % Since it wasn't given, I assumed this for a typical silicon NPN transistor, per Wikipedia.
 
 syms IR1 VBE1 IC1 IC2
 eqn1 = IR1 - ((VCC - VBE1)/R1);
@@ -22,5 +22,5 @@ solset = solve(eqn1,eqn2,eqn3,eqn4);
 
 I0 = abs(eval(solset.IC2));
 
-fprintf('Therefore,\n\t\tI0 = %0.2f uA\n',I0*1e6);
+fprintf('Therefore,\n\t\tI0 = %0.2f uA\n',I0*1e6); % 9.98 uA
 fprintf('\n');
