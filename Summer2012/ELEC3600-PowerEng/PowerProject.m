@@ -48,13 +48,13 @@ while (epsicalc > epsilon)
             end
         end
         % V(k) = (1/Y(k,k))*((P(k)-j*Q(k))/conj(V(k)) - SoV); % I think this
-        % is just conj(S)
+        % is just conj(S(k)/V(k)) as seen below:
         V(k) = (1/Y(k,k))*(conj(S(k)/V(k))   - SoV);
     end
-    cnt = cnt + 1;      % Increment cnt count.
-    epsicalc = max(abs(abs(V) - abs(Vprev)));     % Calculate epsicalcance.
+    cnt = cnt + 1;      % Increment iteration count.
+    epsicalc = max(abs(abs(V) - abs(Vprev)));     % Calculate the difference between iterations.
     Vprev = V;
-end     % End of while loop / Iteration
+end     % End of while loop / Iteration.
 
 fprintf('Total Iterations: %d\n\n',cnt);       % Total cnts.
 for bus = 1:length(V)
