@@ -56,9 +56,10 @@ while (epsicalc > epsilon)     % Start of while loop
     Vprev = V;
 end     % End of while loop / Iteration
 
-fprintf('Total Iterations: %d\n\n',cnt);       % Total cnts.
+cnt       % Total cnts.
+V               % Bus Voltages in Complex form.
 for bus = 1:length(V)
-    fprintf('Voltage at bus %d:\t%0.3f V at %0.2g degrees\n',bus, abs(V(bus)), degrees(angle(V(bus))) );
+    fprintf('Voltage at bus %d:\t%0.3f V at %0.2g degrees\n',bus,abs(V(bus)), degrees(angle(V)) );
 end
 
 % Vmag = abs(V)   % Final Bus Voltages.
