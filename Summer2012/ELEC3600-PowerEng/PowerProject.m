@@ -5,7 +5,7 @@
 
 % Clear up workspace.
 clear all;
-clc;
+%clc;
 
 % Set up parameters.
 epsilon = 0.001;
@@ -18,14 +18,15 @@ Y = [
        0,    -1.000 + 1j*3,      -2.000 + 1j*6,    3 - 1j*9
 ];
 
-V       =  [1.04;1;1;1]; % Known and initial guess.
-S2in    =  0.5 - 1j*0.2;
-S3in    = -1.0 + 1j*0.5;
-S4in    =  0.3 - 1j*0.1;
-Sin     = [0;S2in;S3in;S4in];
-Sout    = [0;0;0;0];
-S       = Sin - Sout;
-N       = length(V);
+V        =  [1.04;1;1;1]; % Known and initial guesses.
+S1gen    =  0;
+S2gen    =  0.5 - 1j*0.2;
+S3gen    = -1.0 + 1j*0.5;
+S4gen    =  0.3 - 1j*0.1;
+Sgen     =  [S1gen;S2gen;S3gen;S4gen]; % Per the diagram, these are the complex powers generated.
+Ssup     =  [0;0;0;0]; % Complex power supplied (None.)
+S        =  Sgen - Ssup;
+N        =  length(V);
 
 % Print output information
 fprintf('ELEC 3600 Power Project\n');
@@ -35,21 +36,20 @@ fprintf('Markus Kreitzer\n\n');
 fprintf('Problem (1.)\n\n');
 
 Vprev = V;
-epsicalc = 1;         % Tolerence.
-cnt = 1;              % cnt starting
-k = 0;
+epsicalc = 1;         % Tolerance when the while loop stops. Set to 1 to make it bigger than our tolerance to start off with.
+cnt = 1;              % Iteration count starting
 
-while (epsicalc > epsilon)     % Start of while loop
-    for i = 2:N
+while (epsicalc > epsilon)
+    for k = 2:N % Since V(1) is known.
         SoV = 0;
-        for k = 1:N
-            if i ~= k
-                SoV = SoV + Y(i,k)* V(k);  % Vk * Yik
+        for n = 1:N
+            if k ~= n
+                SoV = SoV + Y(k,n)* V(n);
             end
         end
-        % V(i) = (1/Y(i,i))*((P(i)-j*Q(i))/conj(V(i)) - SoV); % I think this
+        % V(k) = (1/Y(k,k))*((P(k)-j*Q(k))/conj(V(k)) - SoV); % I think this
         % is just conj(S)
-        V(i) = (1/Y(i,i))*(conj(S(i)/V(i))   - SoV);
+        V(k) = (1/Y(k,k))*(conj(S(k)/V(k))   - SoV);
     end
     cnt = cnt + 1;      % Increment cnt count.
     epsicalc = max(abs(abs(V) - abs(Vprev)));     % Calculate epsicalcance.
@@ -60,9 +60,5 @@ fprintf('Total Iterations: %d\n\n',cnt);       % Total cnts.
 for bus = 1:length(V)
     fprintf('Voltage at bus %d:\t%0.3f V at %0.2g degrees\n',bus, abs(V(bus)), degrees(angle(V(bus))) );
 end
-
-% Vmag = abs(V)   % Final Bus Voltages.
-% Ang = (180/pi)*angle(V)    % Final Bus Voltage Angles in Degree.
-
 
 fprintf('\n');
