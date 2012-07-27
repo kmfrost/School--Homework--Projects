@@ -19,7 +19,9 @@ Vprev = V;
 epsicalc = epsilon + 1;         % Tolerance when the while loop stops. Set to 1 to make it bigger than our tolerance to start off with.
 cnt = 1;              % Iteration count.
 N        =  length(V);
-
+S;
+P        = real(S);
+Q        = imag(S);
 while (epsicalc > epsilon)
     for k = 2:N % Since V(1) is known.
         SoV = 0;
@@ -28,7 +30,7 @@ while (epsicalc > epsilon)
                 SoV = SoV + Ybus(k,n)* V(n);
             end
         end
-        % V(k) = (1/Y(k,k))*((P(k)-j*Q(k))/conj(V(k)) - SoV); % I think this
+        %V(k) = (1/Ybus(k,k))*(( (P(k)-1i*Q(k))/conj(V(k))) - SoV); % I think this
         % is just conj(S(k)/V(k)) as seen below:
         V(k) = (1/Ybus(k,k))*(conj(S(k)/V(k))   - SoV);
     end
