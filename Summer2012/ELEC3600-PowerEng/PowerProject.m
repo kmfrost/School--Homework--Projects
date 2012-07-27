@@ -6,8 +6,15 @@
 clear all;
 clc;
 
-%% Problem 1.
+% Print output information
+fprintf('ELEC 3600 Power Project\n');
+fprintf('%s\n',datestr((now)));
+fprintf('Dr. Aleck Leedy\n');
+fprintf('Markus Kreitzer\n\n');
+fprintf('All angles are in degrees\n\n');
 
+%% Problem 1.
+fprintf('Problem (1.)\n\n');
 
 % Set up parameters.
 epsilon = 0.001;
@@ -18,7 +25,6 @@ Y = [
 -1 + 1j*3,    -0.666 + 1j*2,       3.666 - 1j*11, -2 + 1j*6;
        0,    -1.000 + 1j*3,      -2.000 + 1j*6,    3 - 1j*9
 ];
-
 V        =  [1.04;1;1;1]; % Known and initial guesses.
 S1gen    =  0;            % No power generated specified at bus 1.
 S2gen    =  0.5 - 1j*0.2; 
@@ -28,21 +34,17 @@ Sgen     =  [S1gen;S2gen;S3gen;S4gen]; % Per the diagram, these are the complex 
 Ssup     =  [0;0;0;0]; % Complex power supplied (None.)
 S        =  Sgen - Ssup;
 
-% Print output information
-fprintf('ELEC 3600 Power Project\n');
-fprintf('%s\n',datestr((now)));
-fprintf('Dr. Aleck Leedy\n');
-fprintf('Markus Kreitzer\n\n');
-fprintf('Problem (1.)\n\n');
+[V,cnt] = powerflowGS(epsilon,Y,V,S); % Function I created for reuse.
 
-[V,cnt] = powerflowGS(epsilon,Y,V,S);
-
-fprintf('Total Iterations: %d\n\n',cnt);       % Total cnts.
+fprintf('Total Iterations: %d\n\n',cnt);
+fprintf('====================================\n');
+fprintf('|| Bus  | Voltage |  Angle        ||\n');
+fprintf('------------------------------------\n');
 for bus = 1:length(V)
-    fprintf('Voltage at bus %d:\t%5.3f V at %5.2f degrees\n',bus, abs(V(bus)), degrees(angle(V(bus))) );
+    fprintf('|| %2d   | %5.3f   | %5.2f degrees ||\n',bus, abs(V(bus)), degrees(angle(V(bus))) );
 end
-
-fprintf('\n');
+fprintf('====================================\n');
+fprintf('\t\t\t\t\tV(pu)\n\n\n');
 
 %% Problem 2.
 % Clean up variables from Problem 1.
@@ -117,7 +119,43 @@ for col = 1:N
     end
 end
 
-format short;
-
 fprintf('Problem (2.)\n\n');
-Y
+fprintf('Ybus:\n\n');
+fprintf('Rectangular Format:\n');
+fprintf('---------------------------------------------------------------------\n');
+for n = 1:length(Y)
+    fprintf('|  R    |  jX    ');
+end
+fprintf('|\n');
+fprintf('---------------------------------------------------------------------\n');
+for row = 1:length(Y)
+    for col = 1:length(Y)
+        fprintf('| %6.3f  %6.3f ',real(Y(row,col)),imag(Y(row,col)));
+    end
+    fprintf('|\n');
+end
+fprintf('---------------------------------------------------------------------\n');
+fprintf('\t\t\t\t\t\t\t\t\tpu\n');
+
+
+fprintf('Polar Format:\n');
+fprintf('---------------------------------------------------------------------\n');
+for n = 1:length(Y)
+    fprintf('|  Mag  @  Angle ');
+end
+fprintf('|\n');
+fprintf('---------------------------------------------------------------------\n');
+for row = 1:length(Y)
+    for col = 1:length(Y)
+        fprintf('| %5.3f @ %6.2f ',abs(Y(row,col)),degrees(angle(Y(row,col))));
+    end
+    fprintf('|\n');
+end
+fprintf('---------------------------------------------------------------------\n');
+fprintf('\t\t\t\t\t\t\t\t\tpu\n\n');
+
+
+
+
+
+
