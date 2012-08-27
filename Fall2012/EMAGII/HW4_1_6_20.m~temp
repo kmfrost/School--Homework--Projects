@@ -1,0 +1,15 @@
+% HW 4
+% Assigned Problem 3
+% Wentworth Problem 6.20
+% 2012/08/26
+clc;
+clear all;
+fprintf('\nWentworth Probelm 6.20\n\n');
+f         = 1e9;
+u         = 4*pi*1e-7;
+sigma_r   = [ 5.9 6.2 4.5 1.4 ] * 1e7;
+mu_r      = [ 1   1   1   600 ];
+
+for sigma = sigma_r
+    delta = 1/sqrt(pi*f*u*mu_r*sigma)
+end
