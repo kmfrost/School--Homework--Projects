@@ -5,6 +5,7 @@
 clc;
 clear all;
 fprintf('\nWentworth Probelm 6.25\n\n');
+
 %% DC
 sigma_cu    = 5.9e7;
 diam        = 0.004;
