@@ -1,0 +1,140 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>HW5_3_madeup</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-08-29"><meta name="DC.source" content="HW5_3_madeup.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Constants</a></li><li><a href="#3">Code</a></li></ul></div><pre class="codeinput"><span class="comment">% HW 5</span>
+<span class="comment">% Assigned Problem 3</span>
+<span class="comment">% Baginski Problem 1</span>
+<span class="comment">% 2012/08/28</span>
+clc;
+clear <span class="string">all</span>;
+fprintf(<span class="string">'\nBaginski HW 5, Problem 3\n'</span>);
+fprintf(<span class="string">'Markus Kreitzer\n'</span>);
+fprintf(<span class="string">'%s\n\n'</span>,date);
+</pre><pre class="codeoutput">
+Baginski HW 5, Problem 3
+Markus Kreitzer
+29-Aug-2012
+
+</pre><h2>Constants<a name="2"></a></h2><pre class="codeinput">c         = 2.998e8; <span class="comment">% (m/s)</span>
+epsln_0   = (1e-9/(36*pi));
+u_0         = pi*4e-7;
+f         = 100e6; <span class="comment">% (100 MHz)</span>
+w         = 2*pi*f;
+</pre><h2>Code<a name="3"></a></h2><pre class="codeinput">syms <span class="string">etta</span> <span class="string">sigma</span>
+alpha   = 100;
+beta    = alpha;
+<span class="comment">% epsln = epsln_0 * epsln_r;</span>
+
+eqn1 = etta - sqrt( (1j * w * u_0)/sigma );
+eqn2 = alpha - sqrt(pi * f * u_0 * sigma);
+sol = solve(eqn1,eqn2);
+etta = eval(sol.etta);
+sigma = eval(sol.sigma);
+E0 = 10;
+H0 = E0/abs(etta);
+fprintf(<span class="string">'\tH = %0.2f * exp(-%0.2f * z) * exp(-j * %0.2f) * exp(j * %0.2f) * -a_y\n'</span>,H0,alpha,beta,degrees(angle(etta)));
+Pavg = 0.5 * E0^2 / abs(etta);
+fprintf(<span class="string">'\tPavg = %0.2f\n'</span>,Pavg);
+</pre><pre class="codeoutput">	H = 1.79 * exp(-100.00 * z) * exp(-j * 100.00) * exp(j * 45.00) * -a_y
+	Pavg = 8.96
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+% HW 5
+% Assigned Problem 3
+% Baginski Problem 1
+% 2012/08/28
+clc;
+clear all;
+fprintf('\nBaginski HW 5, Problem 3\n');
+fprintf('Markus Kreitzer\n');
+fprintf('%s\n\n',date);
+
+%% Constants
+c         = 2.998e8; % (m/s)
+epsln_0   = (1e-9/(36*pi));
+u_0         = pi*4e-7;
+f         = 100e6; % (100 MHz)
+w         = 2*pi*f;
+
+%% Code
+syms etta sigma
+alpha   = 100;
+beta    = alpha;
+% epsln = epsln_0 * epsln_r;
+
+eqn1 = etta - sqrt( (1j * w * u_0)/sigma );
+eqn2 = alpha - sqrt(pi * f * u_0 * sigma);
+sol = solve(eqn1,eqn2);
+etta = eval(sol.etta);
+sigma = eval(sol.sigma);
+E0 = 10;
+H0 = E0/abs(etta);
+fprintf('\tH = %0.2f * exp(-%0.2f * z) * exp(-j * %0.2f) * exp(j * %0.2f) * -a_y\n',H0,alpha,beta,degrees(angle(etta)));
+Pavg = 0.5 * E0^2 / abs(etta);
+fprintf('\tPavg = %0.2f\n',Pavg);
+
+
+##### SOURCE END #####
+--></body></html>

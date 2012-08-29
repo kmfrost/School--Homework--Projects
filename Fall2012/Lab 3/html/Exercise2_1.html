@@ -1,0 +1,213 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Exercise2_1</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-08-29"><meta name="DC.source" content="Exercise2_1.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Exercise 2.1</a></li><li><a href="#3">Exercise 2.2</a></li><li><a href="#4">Exercise 2.3</a></li><li><a href="#5">Exercise 2.4</a></li></ul></div><pre class="codeinput"><span class="comment">% Lab 3, Week 2</span>
+</pre><h2>Exercise 2.1<a name="2"></a></h2><pre class="codeinput">clc;
+clear <span class="string">all</span>;
+<span class="comment">% Constants</span>
+VCC = 9;
+VEE = 0;
+VA  = Inf;
+R1  = 6.8e3;
+R2  = 30e3;
+RC  = 3e3;
+RE  = 470;
+Beta = 100;
+VBE = 0.7;
+
+<span class="comment">% Q-Point</span>
+[VCE IC] = findQP(R1,R2,RC,RE,Beta,VCC,VEE,VA);
+fprintf(<span class="string">'Exercise 2.1\n'</span>);
+fprintf(<span class="string">'VCE = %0.3f V\n'</span>,VCE);
+fprintf(<span class="string">'IC  = %0.3f mA\n\n'</span>,IC*1e3);
+</pre><pre class="codeoutput">Exercise 2.1
+VCE = 2.688 V
+IC  = 1.817 mA
+
+</pre><h2>Exercise 2.2<a name="3"></a></h2><pre class="codeinput">Beta = 70:1:300;
+[VCE IC] = findQP(R1,R2,RC,RE,Beta,VCC,VEE,VA);
+plot(Beta,VCE);
+xlabel(<span class="string">'Beta'</span>);
+ylabel(<span class="string">'VCE'</span>);
+grid <span class="string">on</span>;
+figure
+plot(Beta,IC);
+xlabel(<span class="string">'Beta'</span>);
+ylabel(<span class="string">'IC'</span>);
+grid <span class="string">on</span>;
+fprintf(<span class="string">'Exercise 2.2\n'</span>);
+fprintf(<span class="string">'VCE Min: %0.3f Max: %0.3f (V)\n'</span>,min(VCE),max(VCE));
+fprintf(<span class="string">'IC Min:  %0.3f Max: %0.3f (mA)\n\n'</span>,min(IC*1e3),max(IC*1e3));
+</pre><pre class="codeoutput">Exercise 2.2
+VCE Min: 2.178 Max: 2.977 (V)
+IC Min:  1.732 Max: 1.965 (mA)
+
+</pre><img vspace="5" hspace="5" src="Exercise2_1_01.png" alt=""> <img vspace="5" hspace="5" src="Exercise2_1_02.png" alt=""> <h2>Exercise 2.3<a name="4"></a></h2><pre class="codeinput">f = 1e3;
+w = 2*pi*f;
+C = [1e-12 1e-9 1e-6];
+Z = -j./(w .* C)
+</pre><pre class="codeoutput">
+Z =
+
+   1.0e+08 *
+
+        0 - 1.5915i        0 - 0.0016i        0 - 0.0000i
+
+</pre><h2>Exercise 2.4<a name="5"></a></h2><pre class="codeinput">Beta = 100;
+RL   = 10e3;
+RS   = 0;
+[AV,AVDB,RIN,ROUT,GM,RPI] =  Analog_findGAINfunc(R1,R2,RC,RE,Beta,VCC,VEE,VA,RS,RL)
+</pre><pre class="codeoutput">
+AV =
+
+ -162.4867
+
+
+AVDB =
+
+   44.2164
+
+
+RIN =
+
+   4.9740e+03
+
+
+ROUT =
+
+        3000
+
+
+GM =
+
+    0.0704
+
+
+RPI =
+
+   1.4202e+03
+
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+% Lab 3, Week 2
+
+%% Exercise 2.1
+clc;
+clear all;
+% Constants
+VCC = 9;
+VEE = 0;
+VA  = Inf;
+R1  = 6.8e3;
+R2  = 30e3;
+RC  = 3e3;
+RE  = 470;
+Beta = 100;
+VBE = 0.7;
+
+% Q-Point
+[VCE IC] = findQP(R1,R2,RC,RE,Beta,VCC,VEE,VA);
+fprintf('Exercise 2.1\n');
+fprintf('VCE = %0.3f V\n',VCE);
+fprintf('IC  = %0.3f mA\n\n',IC*1e3);
+
+%% Exercise 2.2
+Beta = 70:1:300;
+[VCE IC] = findQP(R1,R2,RC,RE,Beta,VCC,VEE,VA);
+plot(Beta,VCE);
+xlabel('Beta');
+ylabel('VCE');
+grid on;
+figure
+plot(Beta,IC);
+xlabel('Beta');
+ylabel('IC');
+grid on;
+fprintf('Exercise 2.2\n');
+fprintf('VCE Min: %0.3f Max: %0.3f (V)\n',min(VCE),max(VCE));
+fprintf('IC Min:  %0.3f Max: %0.3f (mA)\n\n',min(IC*1e3),max(IC*1e3));
+
+%% Exercise 2.3
+f = 1e3;
+w = 2*pi*f;
+C = [1e-12 1e-9 1e-6];
+Z = -j./(w .* C)
+
+%% Exercise 2.4
+Beta = 100;
+RL   = 10e3;
+RS   = 0;
+[AV,AVDB,RIN,ROUT,GM,RPI] =  Analog_findGAINfunc(R1,R2,RC,RE,Beta,VCC,VEE,VA,RS,RL)
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

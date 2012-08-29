@@ -17,3 +17,4 @@ etta = eval(sol.etta)
 etta_mag = abs(etta)
 etta_ang = degrees(angle(etta))
 sigma = eval(sol.sigma)
+
