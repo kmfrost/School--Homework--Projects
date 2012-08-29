@@ -16,8 +16,6 @@ for n = 1:length(sigma_r)
 end
 fprintf('\n');
 
-
-
 %Output:
 % Wentworth Problem 6.20
 % 
