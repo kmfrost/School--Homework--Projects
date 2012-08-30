@@ -1,0 +1,20 @@
+* Z:\markuskreitzer On My Mac\code_n_scripts\School--Homework--Projects\Fall2012\Lab 3\LTSpice\Prelab2-schematic1.asc
+Q1 N002 N003 N004 0 2N3904
+RE N004 0 470
+RC N001 N002 3k
+RB2 N001 N003 30k
+RB1 N003 0 6.8k
+VCC N001 0 9
+R1 VOUT 0 10k
+VS VIN 0 SINE(0 1.0mV 1kHz) AC 1mV
+CE N004 0 47µ
+C2 VOUT N002 47µ
+C1 N003 VIN 47µ
+.model NPN NPN
+.model PNP PNP
+.lib C:\Program Files (x86)\LTC\LTspiceIV\lib\cmp\standard.bjt
+;op
+.ac dec 1000 1 1e9
+;tran 0 8ms 4ms
+.backanno
+.end

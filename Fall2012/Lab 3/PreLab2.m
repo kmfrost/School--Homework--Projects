@@ -1,4 +1,6 @@
 % Lab 3, Week 2
+% (c) 2012 Markus Kreitzer
+% 2012/08/29
 
 %% Exercise 2.1
 clc;
@@ -47,6 +49,17 @@ Beta = 100;
 RL   = 10e3;
 RS   = 0;
 [AV,AVDB,RIN,ROUT,GM,RPI] =  Analog_findGAINfunc(R1,R2,RC,RE,Beta,VCC,VEE,VA,RS,RL)
+
+%% Exercise 2.5 (LT Spice Info)
+
+fprintf('VB                =  1.626 V\n');
+fprintf('VC                =  2.93 V\n');
+fprintf('VE                =  952.5 mV\n\n');
+fprintf('Power Dissipated  =  20.393 mW\n');
+gain = (163/0.64);
+fprintf('Gain = Vout/Vin   = %0.3f V/V\n',gain);
+fprintf('Gain = Vout/Vin   = %0.3f dB\n',20*log10(gain));
+fprintf('BW                =  1 kHz -> 10 MHz\n\n');
 
 
 

@@ -1,0 +1,240 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>PreLab2</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-08-29"><meta name="DC.source" content="PreLab2.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Exercise 2.1</a></li><li><a href="#3">Exercise 2.2</a></li><li><a href="#4">Exercise 2.3</a></li><li><a href="#5">Exercise 2.4</a></li><li><a href="#6">Exercise 2.5 (LT Spice Info)</a></li></ul></div><pre class="codeinput"><span class="comment">% Lab 3, Week 2</span>
+<span class="comment">% (c) 2012 Markus Kreitzer</span>
+<span class="comment">% 2012/08/29</span>
+</pre><h2>Exercise 2.1<a name="2"></a></h2><pre class="codeinput">clc;
+clear <span class="string">all</span>;
+<span class="comment">% Constants</span>
+VCC = 9;
+VEE = 0;
+VA  = Inf;
+R1  = 6.8e3;
+R2  = 30e3;
+RC  = 3e3;
+RE  = 470;
+Beta = 100;
+VBE = 0.7;
+
+<span class="comment">% Q-Point</span>
+[VCE IC] = findQP(R1,R2,RC,RE,Beta,VCC,VEE,VA);
+fprintf(<span class="string">'Exercise 2.1\n'</span>);
+fprintf(<span class="string">'VCE = %0.3f V\n'</span>,VCE);
+fprintf(<span class="string">'IC  = %0.3f mA\n\n'</span>,IC*1e3);
+</pre><pre class="codeoutput">Exercise 2.1
+VCE = 2.688 V
+IC  = 1.817 mA
+
+</pre><h2>Exercise 2.2<a name="3"></a></h2><pre class="codeinput">Beta = 70:1:300;
+[VCE IC] = findQP(R1,R2,RC,RE,Beta,VCC,VEE,VA);
+plot(Beta,VCE);
+xlabel(<span class="string">'Beta'</span>);
+ylabel(<span class="string">'VCE'</span>);
+grid <span class="string">on</span>;
+figure
+plot(Beta,IC);
+xlabel(<span class="string">'Beta'</span>);
+ylabel(<span class="string">'IC'</span>);
+grid <span class="string">on</span>;
+fprintf(<span class="string">'Exercise 2.2\n'</span>);
+fprintf(<span class="string">'VCE Min: %0.3f Max: %0.3f (V)\n'</span>,min(VCE),max(VCE));
+fprintf(<span class="string">'IC Min:  %0.3f Max: %0.3f (mA)\n\n'</span>,min(IC*1e3),max(IC*1e3));
+</pre><pre class="codeoutput">Exercise 2.2
+VCE Min: 2.178 Max: 2.977 (V)
+IC Min:  1.732 Max: 1.965 (mA)
+
+</pre><h2>Exercise 2.3<a name="4"></a></h2><pre class="codeinput">f = 1e3;
+w = 2*pi*f;
+C = [1e-12 1e-9 1e-6];
+Z = -j./(w .* C)
+</pre><h2>Exercise 2.4<a name="5"></a></h2><pre class="codeinput">Beta = 100;
+RL   = 10e3;
+RS   = 0;
+[AV,AVDB,RIN,ROUT,GM,RPI] =  Analog_findGAINfunc(R1,R2,RC,RE,Beta,VCC,VEE,VA,RS,RL)
+</pre><pre class="codeoutput">
+AV =
+
+ -162.4867
+
+
+AVDB =
+
+   44.2164
+
+
+RIN =
+
+   4.9740e+03
+
+
+ROUT =
+
+        3000
+
+
+GM =
+
+    0.0704
+
+
+RPI =
+
+   1.4202e+03
+
+</pre><h2>Exercise 2.5 (LT Spice Info)<a name="6"></a></h2><p>This is a latex example: <img src="PreLab2_eq18353.png" alt="${\pi + x^2}$"></p><pre class="codeinput">fprintf(<span class="string">'VB                =  1.626 V\n'</span>);
+fprintf(<span class="string">'VC                =  2.93 V\n'</span>);
+fprintf(<span class="string">'VE                =  952.5 mV\n\n'</span>);
+fprintf(<span class="string">'Power Dissipated  =  20.393 mW\n'</span>);
+gain = (163/0.64);
+fprintf(<span class="string">'Gain = Vout/Vin   = %0.3f V/V\n'</span>,gain);
+fprintf(<span class="string">'Gain = Vout/Vin   = %0.3f dB\n'</span>,20*log10(gain));
+fprintf(<span class="string">'BW                =  1 kHz -&gt; 10 MHz\n\n'</span>);
+</pre><pre class="codeoutput">VB                =  1.626 V
+VC                =  2.93 V
+VE                =  952.5 mV
+
+Power Dissipated  =  20.393 mW
+Gain = Vout/Vin   = 254.688 V/V
+Gain = Vout/Vin   = 48.120 dB
+BW                =  1 kHz -&gt; 10 MHz
+
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+% Lab 3, Week 2
+% (c) 2012 Markus Kreitzer
+% 2012/08/29
+
+%% Exercise 2.1
+clc;
+clear all;
+% Constants
+VCC = 9;
+VEE = 0;
+VA  = Inf;
+R1  = 6.8e3;
+R2  = 30e3;
+RC  = 3e3;
+RE  = 470;
+Beta = 100;
+VBE = 0.7;
+
+% Q-Point
+[VCE IC] = findQP(R1,R2,RC,RE,Beta,VCC,VEE,VA);
+fprintf('Exercise 2.1\n');
+fprintf('VCE = %0.3f V\n',VCE);
+fprintf('IC  = %0.3f mA\n\n',IC*1e3);
+
+%% Exercise 2.2
+Beta = 70:1:300;
+[VCE IC] = findQP(R1,R2,RC,RE,Beta,VCC,VEE,VA);
+plot(Beta,VCE);
+xlabel('Beta');
+ylabel('VCE');
+grid on;
+figure
+plot(Beta,IC);
+xlabel('Beta');
+ylabel('IC');
+grid on;
+fprintf('Exercise 2.2\n');
+fprintf('VCE Min: %0.3f Max: %0.3f (V)\n',min(VCE),max(VCE));
+fprintf('IC Min:  %0.3f Max: %0.3f (mA)\n\n',min(IC*1e3),max(IC*1e3));
+
+%% Exercise 2.3
+f = 1e3;
+w = 2*pi*f;
+C = [1e-12 1e-9 1e-6];
+Z = -j./(w .* C)
+
+%% Exercise 2.4
+Beta = 100;
+RL   = 10e3;
+RS   = 0;
+[AV,AVDB,RIN,ROUT,GM,RPI] =  Analog_findGAINfunc(R1,R2,RC,RE,Beta,VCC,VEE,VA,RS,RL)
+
+%% Exercise 2.5 (LT Spice Info)
+% This is a latex example:
+% ${\pi + x^2}$
+
+fprintf('VB                =  1.626 V\n');
+fprintf('VC                =  2.93 V\n');
+fprintf('VE                =  952.5 mV\n\n');
+fprintf('Power Dissipated  =  20.393 mW\n');
+gain = (163/0.64);
+fprintf('Gain = Vout/Vin   = %0.3f V/V\n',gain);
+fprintf('Gain = Vout/Vin   = %0.3f dB\n',20*log10(gain));
+fprintf('BW                =  1 kHz -> 10 MHz\n\n');
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
