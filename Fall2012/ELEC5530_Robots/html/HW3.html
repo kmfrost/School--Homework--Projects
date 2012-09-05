@@ -1,0 +1,150 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>HW 3, Problem 1</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-09-04"><meta name="DC.source" content="HW3.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>HW 3, Problem 1</h1><!--introduction--><p>ELEC 5530 - Thaddeus Roppel 2012/09/04 Markus Kreitzer, Levi Smolin, Ray Preston</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Declare Constants</a></li><li><a href="#2">Run through six different scenarios where the wheel velocities vary.</a></li></ul></div><h2>Declare Constants<a name="1"></a></h2><pre class="codeinput">Zeta_I0         = [0;0;0];  <span class="comment">% Initial position</span>
+r_w             = 1;    <span class="comment">% wheel radius</span>
+l               = 1;    <span class="comment">% half the vehicle wheelbase</span>
+theta           = pi/2;
+R_inv_theta     = [ cos(theta),     -sin(theta),    0;
+                    sin(theta),      cos(theta),    0;
+                    0,                        0,    1
+                   ];
+phi_dot_1       = 1;   <span class="comment">%wheel 2 (left wheel) angular rate (phi2-dot)</span>
+</pre><h2>Run through six different scenarios where the wheel velocities vary.<a name="2"></a></h2><pre class="codeinput">scenarios       = [1 2 3 4 5 6];
+<span class="keyword">for</span> phi_dot_2   = scenarios
+    <span class="comment">% Velocity matrix of the</span>
+    Zeta_I_dot      = R_inv_theta * [ (r_w * phi_dot_1)/2 + (r_w .* phi_dot_2)/2;
+                                       0;
+                                       (r_w * phi_dot_1)/(2*l) - (r_w .* phi_dot_2)/(2*l)
+                                    ];
+    <span class="comment">% 0 to 20 seconds</span>
+    t               = 0:.1:20;
+    <span class="comment">% Matrix with positions throughout time.</span>
+    Zeta_I          = [ Zeta_I_dot(1) * cos(Zeta_I_dot(3) * t);
+                        Zeta_I_dot(2) * sin(Zeta_I_dot(3) * t);
+                        Zeta_I_dot(3) * t ];
+    x   = Zeta_I(1,:);
+    y   = Zeta_I(2,:);
+    set(0,<span class="string">'DefaultFigureVisible'</span>,<span class="string">'off'</span>);
+    figure
+    plot(x,y) <span class="comment">%produces a 2-D plot</span>
+    xlabel(<span class="string">'x'</span>);
+    ylabel(<span class="string">'y'</span>);
+
+    figure
+    scatter3(x,y,t) <span class="comment">%produces a 3-D trajectory plot</span>
+    xlabel(<span class="string">'x'</span>);
+    ylabel(<span class="string">'y'</span>);
+    zlabel(<span class="string">'time'</span>);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="HW3_01.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+%% HW 3, Problem 1 
+% ELEC 5530 - Thaddeus Roppel
+% 2012/09/04
+% Markus Kreitzer, Levi Smolin, Ray Preston
+
+%% Declare Constants
+Zeta_I0         = [0;0;0];  % Initial position
+r_w             = 1;    % wheel radius
+l               = 1;    % half the vehicle wheelbase
+theta           = pi/2;
+R_inv_theta     = [ cos(theta),     -sin(theta),    0;
+                    sin(theta),      cos(theta),    0;
+                    0,                        0,    1
+                   ];
+phi_dot_1       = 1;   %wheel 2 (left wheel) angular rate (phi2-dot)
+
+%% Run through six different scenarios where the wheel velocities vary.
+scenarios       = [1 2 3 4 5 6];
+for phi_dot_2   = scenarios
+    % Velocity matrix of the 
+    Zeta_I_dot      = R_inv_theta * [ (r_w * phi_dot_1)/2 + (r_w .* phi_dot_2)/2;
+                                       0;
+                                       (r_w * phi_dot_1)/(2*l) - (r_w .* phi_dot_2)/(2*l)
+                                    ];
+    % 0 to 20 seconds
+    t               = 0:.1:20;
+    % Matrix with positions throughout time.
+    Zeta_I          = [ Zeta_I_dot(1) * cos(Zeta_I_dot(3) * t);
+                        Zeta_I_dot(2) * sin(Zeta_I_dot(3) * t);
+                        Zeta_I_dot(3) * t ];
+    x   = Zeta_I(1,:);
+    y   = Zeta_I(2,:);
+    set(0,'DefaultFigureVisible','off');
+    figure
+    plot(x,y) %produces a 2-D plot
+    xlabel('x');
+    ylabel('y');
+    
+    figure
+    scatter3(x,y,t) %produces a 3-D trajectory plot
+    xlabel('x');
+    ylabel('y');
+    zlabel('time');
+end
+
+##### SOURCE END #####
+--></body></html>
