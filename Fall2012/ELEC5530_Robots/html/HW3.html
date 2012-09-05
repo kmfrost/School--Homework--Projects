@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>HW 3, Problem 1</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-09-04"><meta name="DC.source" content="HW3.m"><style type="text/css">
+      --><title>HW3</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-09-04"><meta name="DC.source" content="HW3.m"><style type="text/css">
 
 body {
   background-color: white;
@@ -62,16 +62,19 @@ p.footer {
   color: gray;
 }
 
-  </style></head><body><div class="content"><h1>HW 3, Problem 1</h1><!--introduction--><p>ELEC 5530 - Thaddeus Roppel 2012/09/04 Markus Kreitzer, Levi Smolin, Ray Preston</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Declare Constants</a></li><li><a href="#2">Run through six different scenarios where the wheel velocities vary.</a></li></ul></div><h2>Declare Constants<a name="1"></a></h2><pre class="codeinput">Zeta_I0         = [0;0;0];  <span class="comment">% Initial position</span>
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">HW 3, Problem 1</a></li><li><a href="#2">Declare Constants</a></li><li><a href="#3">Run through six different scenarios where the wheel velocities vary.</a></li><li><a href="#4">Dr. Roppel's Original Code (To Be Removed)</a></li></ul></div><h2>HW 3, Problem 1<a name="1"></a></h2><p>ELEC 5530 - Thaddeus Roppel 2012/09/04 Markus Kreitzer, Levi Smolin, Ray Preston</p><pre class="codeinput">clear <span class="string">all</span>;
+clc;
+</pre><h2>Declare Constants<a name="2"></a></h2><pre class="codeinput">Zeta_I0         = [0;0;0];  <span class="comment">% Initial position</span>
 r_w             = 1;    <span class="comment">% wheel radius</span>
 l               = 1;    <span class="comment">% half the vehicle wheelbase</span>
 theta           = pi/2;
+
 R_inv_theta     = [ cos(theta),     -sin(theta),    0;
                     sin(theta),      cos(theta),    0;
                     0,                        0,    1
                    ];
 phi_dot_1       = 1;   <span class="comment">%wheel 2 (left wheel) angular rate (phi2-dot)</span>
-</pre><h2>Run through six different scenarios where the wheel velocities vary.<a name="2"></a></h2><pre class="codeinput">scenarios       = [1 2 3 4 5 6];
+</pre><h2>Run through six different scenarios where the wheel velocities vary.<a name="3"></a></h2><pre class="codeinput">scenarios       = [1 2 3 4 5 6];
 <span class="keyword">for</span> phi_dot_2   = scenarios
     <span class="comment">% Velocity matrix of the</span>
     Zeta_I_dot      = R_inv_theta * [ (r_w * phi_dot_1)/2 + (r_w .* phi_dot_2)/2;
@@ -86,7 +89,6 @@ phi_dot_1       = 1;   <span class="comment">%wheel 2 (left wheel) angular rate 
                         Zeta_I_dot(3) * t ];
     x   = Zeta_I(1,:);
     y   = Zeta_I(2,:);
-    set(0,<span class="string">'DefaultFigureVisible'</span>,<span class="string">'off'</span>);
     figure
     plot(x,y) <span class="comment">%produces a 2-D plot</span>
     xlabel(<span class="string">'x'</span>);
@@ -98,19 +100,43 @@ phi_dot_1       = 1;   <span class="comment">%wheel 2 (left wheel) angular rate 
     ylabel(<span class="string">'y'</span>);
     zlabel(<span class="string">'time'</span>);
 <span class="keyword">end</span>
-</pre><img vspace="5" hspace="5" src="HW3_01.png" alt=""> <p class="footer"><br>
+</pre><img vspace="5" hspace="5" src="HW3_01.png" alt=""> <img vspace="5" hspace="5" src="HW3_02.png" alt=""> <img vspace="5" hspace="5" src="HW3_03.png" alt=""> <img vspace="5" hspace="5" src="HW3_04.png" alt=""> <img vspace="5" hspace="5" src="HW3_05.png" alt=""> <img vspace="5" hspace="5" src="HW3_06.png" alt=""> <img vspace="5" hspace="5" src="HW3_07.png" alt=""> <img vspace="5" hspace="5" src="HW3_08.png" alt=""> <img vspace="5" hspace="5" src="HW3_09.png" alt=""> <img vspace="5" hspace="5" src="HW3_10.png" alt=""> <img vspace="5" hspace="5" src="HW3_11.png" alt=""> <img vspace="5" hspace="5" src="HW3_12.png" alt=""> <h2>Dr. Roppel's Original Code (To Be Removed)<a name="4"></a></h2><pre class="codeinput"><span class="comment">%simulation of trajectory for the case in which</span>
+<span class="comment">%both wheels are turning at a constant rate.</span>
+r   = 1; <span class="comment">%wheel radius</span>
+c2  = 1; <span class="comment">%wheel 2 (left wheel) angular rate (phi2-dot)</span>
+a   = 2; <span class="comment">%ratio of wheel 1 (right wheel) to wheel 2 speed</span>
+l   = 1; <span class="comment">%half the wheelbase</span>
+x0  = 0; <span class="comment">%inital global x position</span>
+y0  = 0; <span class="comment">%initial global y position</span>
+t   = 0:.1:20;
+x   = x0+l*((a+1)/(a-1))*sin((r/2/l)*(a-1)*c2*t);
+y   = y0-l*((a+1)/(a-1))*(cos((r/2/l)*(a-1)*c2*t)-1);
+figure
+plot(x,y); <span class="comment">%produces a 2-D plot</span>
+axis <span class="string">equal</span>
+xlabel(<span class="string">'x'</span>)
+ylabel(<span class="string">'y'</span>)
+figure
+scatter3(x,y,t); <span class="comment">%produces a 3-D trajectory plot</span>
+xlabel(<span class="string">'x'</span>)
+ylabel(<span class="string">'y'</span>)
+zlabel(<span class="string">'time'</span>)
+</pre><img vspace="5" hspace="5" src="HW3_13.png" alt=""> <img vspace="5" hspace="5" src="HW3_14.png" alt=""> <p class="footer"><br>
       Published with MATLAB&reg; 7.12<br></p></div><!--
 ##### SOURCE BEGIN #####
 %% HW 3, Problem 1 
 % ELEC 5530 - Thaddeus Roppel
 % 2012/09/04
 % Markus Kreitzer, Levi Smolin, Ray Preston
+clear all;
+clc;
 
 %% Declare Constants
 Zeta_I0         = [0;0;0];  % Initial position
 r_w             = 1;    % wheel radius
 l               = 1;    % half the vehicle wheelbase
 theta           = pi/2;
+
 R_inv_theta     = [ cos(theta),     -sin(theta),    0;
                     sin(theta),      cos(theta),    0;
                     0,                        0,    1
@@ -133,7 +159,6 @@ for phi_dot_2   = scenarios
                         Zeta_I_dot(3) * t ];
     x   = Zeta_I(1,:);
     y   = Zeta_I(2,:);
-    set(0,'DefaultFigureVisible','off');
     figure
     plot(x,y) %produces a 2-D plot
     xlabel('x');
@@ -145,6 +170,29 @@ for phi_dot_2   = scenarios
     ylabel('y');
     zlabel('time');
 end
+
+%% Dr. Roppel's Original Code (To Be Removed)
+%simulation of trajectory for the case in which
+%both wheels are turning at a constant rate.
+r   = 1; %wheel radius
+c2  = 1; %wheel 2 (left wheel) angular rate (phi2-dot)
+a   = 2; %ratio of wheel 1 (right wheel) to wheel 2 speed
+l   = 1; %half the wheelbase
+x0  = 0; %inital global x position
+y0  = 0; %initial global y position
+t   = 0:.1:20;
+x   = x0+l*((a+1)/(a-1))*sin((r/2/l)*(a-1)*c2*t);
+y   = y0-l*((a+1)/(a-1))*(cos((r/2/l)*(a-1)*c2*t)-1);
+figure
+plot(x,y); %produces a 2-D plot
+axis equal
+xlabel('x')
+ylabel('y')
+figure
+scatter3(x,y,t); %produces a 3-D trajectory plot
+xlabel('x')
+ylabel('y')
+zlabel('time')
 
 ##### SOURCE END #####
 --></body></html>
