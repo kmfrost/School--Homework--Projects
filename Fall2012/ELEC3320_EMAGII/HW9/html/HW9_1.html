@@ -128,14 +128,16 @@ b       = 1.016e-2;
 l       = 1.63881e-2;
 Z_L     = 50;
 w       = 2*pi*f;
-B_z     = w^2 * sqrt(u_0 * e_0);
+B_u     = w^2 * sqrt(u_0 * e_0);
+k       = sqrt(1-(f_c(1)./f).^2);
+B_z     = B_u*k;
 Z_IN    = Z_0 * ((Z_L + Z_0 * 1j * tan(B_z*l))/(Z_0 + Z_L * 1j * tan(B_z * l)));
 
 fprintf(<span class="string">'Input Impedence: (Z_in): %0.2f Ohms angle: %0.2f&ordm;\n'</span>,abs(Z_IN), degrees(angle(Z_IN)));
 fprintf(<span class="string">'\n\n'</span>);
 </pre><pre class="codeoutput">Problem 3
 
-Input Impedence: (Z_in): 612.77 Ohms angle: 81.30&ordm;
+Input Impedence: (Z_in): 816.33 Ohms angle: -81.12&ordm;
 
 
 </pre><h2>Problem 4<a name="7"></a></h2><pre class="codeinput">fprintf(<span class="string">'Problem 4\n'</span>);
@@ -222,7 +224,9 @@ b       = 1.016e-2;
 l       = 1.63881e-2;
 Z_L     = 50;
 w       = 2*pi*f;
-B_z     = w^2 * sqrt(u_0 * e_0);
+B_u     = w^2 * sqrt(u_0 * e_0);
+k       = sqrt(1-(f_c(1)./f).^2);
+B_z     = B_u*k;
 Z_IN    = Z_0 * ((Z_L + Z_0 * 1j * tan(B_z*l))/(Z_0 + Z_L * 1j * tan(B_z * l)));
 
 fprintf('Input Impedence: (Z_in): %0.2f Ohms angle: %0.2fº\n',abs(Z_IN), degrees(angle(Z_IN)));
