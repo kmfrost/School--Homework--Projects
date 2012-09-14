@@ -61,12 +61,12 @@ b       = 1.016e-2;
 l       = 1.63881e-2;
 Z_L     = 50;
 w       = 2*pi*f;
-B_u     = w^2 * sqrt(u_0 * e_0);
+B_u     = w * sqrt(u_0 * e_0);
 k       = sqrt(1-(f_c(1)./f).^2);
 B_z     = B_u*k;
-Z_IN    = Z_0 * ((Z_L + Z_0 * 1j * tan(B_z*l))/(Z_0 + Z_L * 1j * tan(B_z * l)));
+Z_IN    = Z_0 * ((Z_L + Z_0 * 1j * tan(B_z * l)) / (Z_0 + Z_L * 1j * tan(B_z * l)));
 
-fprintf('Input Impedence: (Z_in): %0.2f Ohms angle: %0.2fº\n',abs(Z_IN), degrees(angle(Z_IN)));
+fprintf('Input Impedence: (Z_in): %0.2f k-Ohms angle: %0.2fº\n',abs(Z_IN)*1e-3, degrees(angle(Z_IN)));
 fprintf('\n\n');
 
 %% Problem 4
