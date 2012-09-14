@@ -1,0 +1,179 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>HW8Prob1</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-09-11"><meta name="DC.source" content="HW8Prob1.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Calculating TE Cutoff Frequency</a></li></ul></div><pre class="codeinput"><span class="comment">%#!/usr/bin/env octave -q</span>
+</pre><h2>Calculating TE Cutoff Frequency<a name="2"></a></h2><pre>Problem 7.1 and 7.2 from the text.
+EMAG II - Dr. Baginski
+2012/09/11
+HW 8, Problem 1, Wentworth 7.1, 7.2, Page 424</pre><pre class="codeinput">clc;
+clear <span class="string">all</span>;
+fprintf(<span class="string">'HW8\n%s\n\n'</span>,date());
+<span class="comment">% Constants</span>
+e_0 		= (1e-9/(36*pi));
+u_0 		= (4e-7*pi);
+
+<span class="comment">% Given Parameters</span>
+aa			= [ 4.3  *0.0254;	0.9*0.0254 ];
+bb 		= [ 2.150*0.0254; 0.6*0.0254 ];
+modes 	=  [ 1,0; 2,0; 0,1; 1,1; 2,1; 3,0; 3,1; 4,0; 0,2 ];
+<span class="keyword">for</span> prob = [1 2]
+	a = aa(prob);
+	b = bb(prob);
+	fprintf(<span class="string">'Prob 7.%d\n'</span>,prob);
+	<span class="keyword">for</span> i = 1:length(modes)
+		m = modes(i,1);
+		n = modes(i,2);
+		<span class="comment">% General equation to calculate the cutoff frequency.</span>
+		f_c	 	= 0.5 * (m/sqrt(u_0*e_0)) * sqrt((n/a)^2 + (m/b)^2);
+		fprintf(<span class="string">'TE Mode:           (%d,%d)\n'</span>,m,n);
+		fprintf(<span class="string">'Cutoff Frequency:   %0.3f GHz\n'</span>,f_c*1e-9);
+	<span class="keyword">end</span>
+	fprintf(<span class="string">'\n'</span>);
+<span class="keyword">end</span>
+
+fprintf(<span class="string">'\n\n'</span>);
+</pre><pre class="codeoutput">HW8
+11-Sep-2012
+
+Prob 7.1
+TE Mode:           (1,0)
+Cutoff Frequency:   2.747 GHz
+TE Mode:           (2,0)
+Cutoff Frequency:   10.987 GHz
+TE Mode:           (0,1)
+Cutoff Frequency:   0.000 GHz
+TE Mode:           (1,1)
+Cutoff Frequency:   3.071 GHz
+TE Mode:           (2,1)
+Cutoff Frequency:   11.325 GHz
+TE Mode:           (3,0)
+Cutoff Frequency:   24.721 GHz
+TE Mode:           (3,1)
+Cutoff Frequency:   25.062 GHz
+TE Mode:           (4,0)
+Cutoff Frequency:   43.948 GHz
+TE Mode:           (0,2)
+Cutoff Frequency:   0.000 GHz
+
+Prob 7.2
+TE Mode:           (1,0)
+Cutoff Frequency:   9.843 GHz
+TE Mode:           (2,0)
+Cutoff Frequency:   39.370 GHz
+TE Mode:           (0,1)
+Cutoff Frequency:   0.000 GHz
+TE Mode:           (1,1)
+Cutoff Frequency:   11.829 GHz
+TE Mode:           (2,1)
+Cutoff Frequency:   41.500 GHz
+TE Mode:           (3,0)
+Cutoff Frequency:   88.583 GHz
+TE Mode:           (3,1)
+Cutoff Frequency:   90.744 GHz
+TE Mode:           (4,0)
+Cutoff Frequency:   157.480 GHz
+TE Mode:           (0,2)
+Cutoff Frequency:   0.000 GHz
+
+
+
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+%#!/usr/bin/env octave -q
+%% Calculating TE Cutoff Frequency
+%  Problem 7.1 and 7.2 from the text.
+%  EMAG II - Dr. Baginski
+%  2012/09/11
+%  HW 8, Problem 1, Wentworth 7.1, 7.2, Page 424
+clc;
+clear all;
+fprintf('HW8\n%s\n\n',date());
+% Constants
+e_0 		= (1e-9/(36*pi));
+u_0 		= (4e-7*pi);
+
+% Given Parameters
+aa			= [ 4.3  *0.0254;	0.9*0.0254 ];
+bb 		= [ 2.150*0.0254; 0.6*0.0254 ];
+modes 	=  [ 1,0; 2,0; 0,1; 1,1; 2,1; 3,0; 3,1; 4,0; 0,2 ];
+for prob = [1 2]
+	a = aa(prob);
+	b = bb(prob);
+	fprintf('Prob 7.%d\n',prob);
+	for i = 1:length(modes)
+		m = modes(i,1);
+		n = modes(i,2);
+		% General equation to calculate the cutoff frequency.
+		f_c	 	= 0.5 * (m/sqrt(u_0*e_0)) * sqrt((n/a)^2 + (m/b)^2);
+		fprintf('TE Mode:           (%d,%d)\n',m,n);
+		fprintf('Cutoff Frequency:   %0.3f GHz\n',f_c*1e-9);
+	end
+	fprintf('\n');
+end
+
+fprintf('\n\n');
+
+##### SOURCE END #####
+--></body></html>

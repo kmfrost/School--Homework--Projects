@@ -1,0 +1,291 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>H3B</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-09-07"><meta name="DC.source" content="H3B.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">HW 3, Problem 2</a></li><li><a href="#2">Declare Constants</a></li><li><a href="#3">Run through six different scenarios where the wheel velocities vary.</a></li></ul></div><h2>HW 3, Problem 2<a name="1"></a></h2><p>ELEC 5530 - Thaddeus Roppel 2012/09/04 Markus Kreitzer, Levi Smolin, Ray Preston</p><pre class="codeinput">clear <span class="string">all</span>;
+clc;
+</pre><h2>Declare Constants<a name="2"></a></h2><pre class="codeinput">r               = 0.05;    <span class="comment">% wheel radius</span>
+l               = 0.05;  <span class="comment">% half the vehicle wheelbase</span>
+
+
+Zeta_I            = [0;0;0];              <span class="comment">% X,Y,Theta of robot position in global coordinates</span>
+GoalPos           = [10;0;0];                <span class="comment">% X,Y,Theta of Goal</span>
+ObstaclePos       = [5;0;0.5];               <span class="comment">% X,Y,Radius of Obstacle</span>
+
+rForce         = 1; <span class="comment">% Repulsive Force of the obstacle</span>
+aForce         = 0.1; <span class="comment">% Attractive Force</span>
+
+Field          = zeros(3,1); <span class="comment">% Total Potential Field( x-dir, y-dir, angle )</span>
+aField         = zeros(2,1); <span class="comment">% Attractive field due to goal</span>
+rField         = zeros(2,1); <span class="comment">% Repulsive field due to obstacle</span>
+
+timeDiv = 0.1;
+
+wSpeeds=[0;0];          <span class="comment">%Left and Right Wheel speeds</span>
+</pre><h2>Run through six different scenarios where the wheel velocities vary.<a name="3"></a></h2><pre class="codeinput">figure;
+<span class="keyword">while</span> 1
+        aField      = aForce*((GoalPos(1:2)-Zeta_I(1:2)));
+
+        p_q         = norm(ObstaclePos(1:2)-Zeta_I(1:2));
+        <span class="keyword">if</span> p_q~=0
+          rField    = -rForce*((1/p_q))*(1/(p_q*p_q))*((ObstaclePos(1:2)-Zeta_I(1:2))/p_q);
+        <span class="keyword">end</span>
+
+        Field(1:2)=aField+rField;
+
+        <span class="keyword">if</span>( atan(rField(2)/rField(1)) - Zeta_I(3) == 0 )
+            Zeta_I(3) = pi/2;
+        <span class="keyword">end</span>
+
+        <span class="keyword">if</span> Field(1)==0 &amp;&amp; Field(2)== 0
+            Field(3)=0;
+        <span class="keyword">elseif</span> Field(1)==0
+            Field(3)=pi/2;
+        <span class="keyword">elseif</span> Field(2)==0
+            Field(3)=0;
+        <span class="keyword">else</span>
+            Field(3)=atan(Field(2)/Field(1));
+            <span class="keyword">if</span> Field(1)&lt;0&amp;&amp;Field(2)&lt;0
+                Field(3)=(pi)+Field(3);
+            <span class="keyword">elseif</span> Field(1)&lt;0&amp;&amp;Field(2)&gt;0
+                Field(3)=(pi)+Field(3);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+        Zeta_I_dot=[Field(1);Field(2);Field(3)-Zeta_I(3)];
+
+        R_theta = [cos(Zeta_I(3)),sin(Zeta_I(3)),0;-sin(Zeta_I(3)),cos(Zeta_I(3)),0;0,0,1];
+
+        Zeta_L_dot = R_theta * Zeta_I_dot;
+
+        <span class="comment">%Now to solve the set of equations to find the wheel speeds</span>
+        B=[Zeta_L_dot(1);Zeta_L_dot(3)];
+        A=[ r/2,      r/2;
+            r/(2*l), -r/(2*l)
+           ];
+
+        wSpeeds=A\B;
+        hold1 = GoalPos(1) - Zeta_I(1);
+        hold2 = GoalPos(2) - Zeta_I(2);
+        <span class="keyword">if</span> (wSpeeds(1) &lt; 10 &amp;&amp; wSpeeds(2) &lt; 10 &amp;&amp; hold1 ~= 0 &amp;&amp; hold2 ~= 0)
+                wSpeeds(1) = wSpeeds(1) + 10;
+                wSpeeds(2) = wSpeeds(2) + 10;
+        <span class="keyword">end</span>
+        R_inv_theta = [cos(Zeta_I(3)),-sin(Zeta_I(3)),0;sin(Zeta_I(3)),cos(Zeta_I(3)),0;0,0,1];
+
+        <span class="comment">% Velocity matrix</span>
+        Zeta_I_dot      = R_inv_theta * [ (r * wSpeeds(1))/2 + (r * wSpeeds(2))/2;
+                                       0;
+                                      (r * wSpeeds(1))/(2*l) - (r * wSpeeds(2))/(2*l);
+                                    ];
+
+        Zeta_I=Zeta_I+(Zeta_I_dot*timeDiv);
+
+        Zeta_I;
+        hold <span class="string">on</span>
+        plot(Zeta_I(1),Zeta_I(2),<span class="string">'--ro'</span>);
+        plot(5,0,<span class="string">'--ro'</span>,<span class="string">'MarkerSize'</span>,20);
+        plot(10,0,<span class="string">'--gx'</span>,<span class="string">'MarkerSize'</span>,20);
+        grid <span class="string">on</span>;
+        axis([-2 12 -5 5]);
+        <span class="comment">%quiver(Zeta_I(1),Zeta_I(2),Field(1),Field(2));</span>
+        quiver(Zeta_I(1),Zeta_I(2),(0.4*cos(Zeta_I(3))),(0.4*sin(Zeta_I(3))));
+        drawnow
+        hold <span class="string">off</span>
+
+        GoalPos;
+        Zeta_I(3);
+        myposition = [ Zeta_I(1), Zeta_I(2) ];
+        goalposition = [GoalPos(1), GoalPos(2)];
+        distance = norm(goalposition - myposition);
+        <span class="keyword">if</span>( distance &lt; 0.1)
+            <span class="keyword">break</span>;
+        <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+str=sprintf(<span class="string">'We have arrived at your destination. Thank you for flying HAL 9000 Airlines.\nThe Sentients will have your luggage waiting for you at the terminal.\n'</span>);
+disp(str);
+</pre><pre class="codeoutput">We have arrived at your destination. Thank you for flying HAL 9000 Airlines.
+The Sentients will have your luggage waiting for you at the terminal.
+
+</pre><img vspace="5" hspace="5" src="H3B_01.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+%% HW 3, Problem 2
+% ELEC 5530 - Thaddeus Roppel
+% 2012/09/04
+% Markus Kreitzer, Levi Smolin, Ray Preston
+clear all;
+clc;
+
+%% Declare Constants
+r               = 0.05;    % wheel radius
+l               = 0.05;  % half the vehicle wheelbase
+
+
+Zeta_I            = [0;0;0];              % X,Y,Theta of robot position in global coordinates
+GoalPos           = [10;0;0];                % X,Y,Theta of Goal
+ObstaclePos       = [5;0;0.5];               % X,Y,Radius of Obstacle
+
+rForce         = 1; % Repulsive Force of the obstacle
+aForce         = 0.1; % Attractive Force
+
+Field          = zeros(3,1); % Total Potential Field( x-dir, y-dir, angle )
+aField         = zeros(2,1); % Attractive field due to goal
+rField         = zeros(2,1); % Repulsive field due to obstacle
+
+timeDiv = 0.1;
+
+wSpeeds=[0;0];          %Left and Right Wheel speeds
+
+%% Run through six different scenarios where the wheel velocities vary.
+figure;
+while 1
+        aField      = aForce*((GoalPos(1:2)-Zeta_I(1:2)));
+        
+        p_q         = norm(ObstaclePos(1:2)-Zeta_I(1:2));
+        if p_q~=0
+          rField    = -rForce*((1/p_q))*(1/(p_q*p_q))*((ObstaclePos(1:2)-Zeta_I(1:2))/p_q);
+        end
+        
+        Field(1:2)=aField+rField;
+
+        if( atan(rField(2)/rField(1)) - Zeta_I(3) == 0 )
+            Zeta_I(3) = pi/2;
+        end      
+        
+        if Field(1)==0 && Field(2)== 0
+            Field(3)=0;
+        elseif Field(1)==0
+            Field(3)=pi/2;
+        elseif Field(2)==0
+            Field(3)=0;
+        else
+            Field(3)=atan(Field(2)/Field(1));
+            if Field(1)<0&&Field(2)<0
+                Field(3)=(pi)+Field(3);
+            elseif Field(1)<0&&Field(2)>0
+                Field(3)=(pi)+Field(3);
+            end           
+        end
+
+        Zeta_I_dot=[Field(1);Field(2);Field(3)-Zeta_I(3)];
+        
+        R_theta = [cos(Zeta_I(3)),sin(Zeta_I(3)),0;-sin(Zeta_I(3)),cos(Zeta_I(3)),0;0,0,1];
+        
+        Zeta_L_dot = R_theta * Zeta_I_dot;
+        
+        %Now to solve the set of equations to find the wheel speeds
+        B=[Zeta_L_dot(1);Zeta_L_dot(3)];
+        A=[ r/2,      r/2;
+            r/(2*l), -r/(2*l)
+           ];
+        
+        wSpeeds=A\B;
+        hold1 = GoalPos(1) - Zeta_I(1);
+        hold2 = GoalPos(2) - Zeta_I(2);
+        if (wSpeeds(1) < 10 && wSpeeds(2) < 10 && hold1 ~= 0 && hold2 ~= 0)
+                wSpeeds(1) = wSpeeds(1) + 10;
+                wSpeeds(2) = wSpeeds(2) + 10;
+        end
+        R_inv_theta = [cos(Zeta_I(3)),-sin(Zeta_I(3)),0;sin(Zeta_I(3)),cos(Zeta_I(3)),0;0,0,1]; 
+        
+        % Velocity matrix
+        Zeta_I_dot      = R_inv_theta * [ (r * wSpeeds(1))/2 + (r * wSpeeds(2))/2;
+                                       0;
+                                      (r * wSpeeds(1))/(2*l) - (r * wSpeeds(2))/(2*l); 
+                                    ];
+                                
+        Zeta_I=Zeta_I+(Zeta_I_dot*timeDiv);
+        
+        Zeta_I;
+        hold on
+        plot(Zeta_I(1),Zeta_I(2),'REPLACE_WITH_DASH_DASHro');
+        plot(5,0,'REPLACE_WITH_DASH_DASHro','MarkerSize',20);
+        plot(10,0,'REPLACE_WITH_DASH_DASHgx','MarkerSize',20);
+        grid on;
+        axis([-2 12 -5 5]);
+        %quiver(Zeta_I(1),Zeta_I(2),Field(1),Field(2));
+        quiver(Zeta_I(1),Zeta_I(2),(0.4*cos(Zeta_I(3))),(0.4*sin(Zeta_I(3))));
+        drawnow
+        hold off
+
+        GoalPos;
+        Zeta_I(3);
+        myposition = [ Zeta_I(1), Zeta_I(2) ];
+        goalposition = [GoalPos(1), GoalPos(2)];
+        distance = norm(goalposition - myposition); 
+        if( distance < 0.1)
+            break;
+        end
+end
+
+str=sprintf('We have arrived at your destination. Thank you for flying HAL 9000 Airlines.\nThe Sentients will have your luggage waiting for you at the terminal.\n');
+disp(str);
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
