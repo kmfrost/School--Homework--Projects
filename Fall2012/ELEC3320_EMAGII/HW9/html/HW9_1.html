@@ -1,0 +1,257 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Calculate the Cutoff Frequency and Impedence for TM Waveguide.</title><meta name="generator" content="MATLAB 7.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-09-13"><meta name="DC.source" content="HW9_1.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>Calculate the Cutoff Frequency and Impedence for TM Waveguide.</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Info</a></li><li><a href="#2">Constants</a></li><li><a href="#3">Given Parameters</a></li><li><a href="#4">Problem 1</a></li><li><a href="#5">Problem 2</a></li><li><a href="#6">Problem 3</a></li><li><a href="#7">Problem 4</a></li></ul></div><h2>Info<a name="1"></a></h2><div><ul><li> EMAG II - Dr. Baginski</li><li> 2012/09/13</li><li> HW 8, Problem 1, Baginski</li><li> <b>Markus Kreitzer</b> <a href="mailto:markus.kreitzer@auburn.edu">&lt;mailto:markus.kreitzer@auburn.edu markus.kreitzer@auburn.edu</a>&gt;</li></ul></div><pre class="codeinput"><span class="comment">% Add the line below at the top of the file to execute as an Octave script:</span>
+<span class="comment">%   #!/usr/bin/env octave -q</span>
+clc
+clear <span class="string">all</span>
+</pre><h2>Constants<a name="2"></a></h2><pre class="codeinput">e_0 		= (1e-9/(36*pi));
+u_0 		= (4e-7*pi);
+</pre><h2>Given Parameters<a name="3"></a></h2><pre class="codeinput">f 			= 8e9;
+a			= 2.286e-2; <span class="comment">% (cm)</span>
+b 			= 1.016e-2; <span class="comment">% (cm)</span>
+m			= 1;
+n 			= 0;
+</pre><h2>Problem 1<a name="4"></a></h2><pre class="codeinput">fprintf(<span class="string">'Problem 1\n\n'</span>);
+modes 	=  [ 1,0; 2,0,; 0,1; 1,1 ];
+f_c     = zeros(4,1);
+polarization = [ <span class="string">'TE   '</span>; <span class="string">'TE   '</span>; <span class="string">'TE   '</span>; <span class="string">'TE,TM'</span> ];
+	<span class="keyword">for</span> i = 1:length(modes)
+		m = modes(i,1);
+		n = modes(i,2);
+		<span class="comment">% General equation to calculate the cutoff frequency.</span>
+		f_c(i)	 	= 0.5 * (1/sqrt(u_0*e_0)) * sqrt((m/a)^2 + (n/b)^2);
+		fprintf(<span class="string">'Mode: %s           (%d,%d)\n'</span>, polarization(i,:), m, n );
+		fprintf(<span class="string">'Cutoff Frequency:   %0.3f GHz\n'</span>,f_c(i)*1e-9);
+    <span class="keyword">end</span>
+fprintf(<span class="string">'\n\n'</span>);
+</pre><pre class="codeoutput">Problem 1
+
+Mode: TE              (1,0)
+Cutoff Frequency:   6.562 GHz
+Mode: TE              (2,0)
+Cutoff Frequency:   13.123 GHz
+Mode: TE              (0,1)
+Cutoff Frequency:   14.764 GHz
+Mode: TE,TM           (1,1)
+Cutoff Frequency:   16.156 GHz
+
+
+</pre><h2>Problem 2<a name="5"></a></h2><pre class="codeinput">fprintf(<span class="string">'Problem 2\n\n'</span>);
+f           = 8e9;
+v_u         = 1/sqrt(u_0 * e_0);
+k           = sqrt(1-(f_c(1)./f).^2);
+lambda_u    = v_u/f;
+lambda_g    = lambda_u ./ k;
+etta_u      = 120*pi;
+Z           = etta_u/k;
+Z_0         = Z; <span class="comment">% For next problem</span>
+v_g         = k*v_u;
+fprintf(<span class="string">'TE (1,0) Mode:\n'</span>);
+fprintf(<span class="string">'Guided Wavelength (lambda_g): %0.3f cm\n'</span>, 1e2*lambda_g);
+fprintf(<span class="string">'Impedence (Z):                %0.3f Ohms\n'</span>, Z);
+fprintf(<span class="string">'Guided Velocity (V_G):        %0.3f m/s\n'</span>,v_g);
+fprintf(<span class="string">'\n\n'</span>);
+</pre><pre class="codeoutput">Problem 2
+
+TE (1,0) Mode:
+Guided Wavelength (lambda_g): 6.555 cm
+Impedence (Z):                659.003 Ohms
+Guided Velocity (V_G):        171618774.923 m/s
+
+
+</pre><h2>Problem 3<a name="6"></a></h2><pre class="codeinput">fprintf(<span class="string">'Problem 3\n\n'</span>);
+f       = 8e9;
+a       = 2.286e-2;
+b       = 1.016e-2;
+l       = 1.63881e-2;
+Z_L     = 50;
+w       = 2*pi*f;
+B_z     = w^2 * sqrt(u_0 * e_0);
+Z_IN    = Z_0 * ((Z_L + Z_0 * 1j * tan(B_z*l))/(Z_0 + Z_L * 1j * tan(B_z * l)));
+
+fprintf(<span class="string">'Input Impedence: (Z_in): %0.2f Ohms angle: %0.2f&ordm;\n'</span>,abs(Z_IN), degrees(angle(Z_IN)));
+fprintf(<span class="string">'\n\n'</span>);
+</pre><pre class="codeoutput">Problem 3
+
+Input Impedence: (Z_in): 612.77 Ohms angle: 81.30&ordm;
+
+
+</pre><h2>Problem 4<a name="7"></a></h2><pre class="codeinput">fprintf(<span class="string">'Problem 4\n'</span>);
+f = 6.6e9:1e8:13e9;
+m = 1;
+n = 0;
+f_c	 	= 0.5 * (1/sqrt(u_0*e_0)) * sqrt((m/a)^2 + (n/b)^2);
+v_u         = 1/sqrt(u_0 * e_0);
+k           = sqrt(1-(f_c./f).^2);
+lambda_u    = v_u./f;
+lambda_g    = lambda_u ./ k;
+etta_u      = 120*pi;
+Z           = etta_u ./ k;
+plot(f,Z);
+title(<span class="string">'Waveguide Impedence of the TE(1,0) mode versus Frequency.'</span>)
+legend(<span class="string">'Z_{TE} (1,0)'</span>);
+xlabel(<span class="string">'Frequency (GHz)'</span>);
+ylabel(<span class="string">'Impedence (ohms)'</span>);
+grid <span class="string">on</span>;
+</pre><pre class="codeoutput">Problem 4
+</pre><img vspace="5" hspace="5" src="HW9_1_01.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.12<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Calculate the Cutoff Frequency and Impedence for TM Waveguide.
+%% Info
+% *  EMAG II - Dr. Baginski
+% *  2012/09/13
+% *  HW 8, Problem 1, Baginski
+% *  *Markus Kreitzer* <mailto:markus.kreitzer@auburn.edu markus.kreitzer@auburn.edu>
+
+% Add the line below at the top of the file to execute as an Octave script:
+%   #!/usr/bin/env octave -q
+clc
+clear all
+
+%% Constants
+e_0 		= (1e-9/(36*pi));
+u_0 		= (4e-7*pi);
+
+%% Given Parameters
+f 			= 8e9;
+a			= 2.286e-2; % (cm)
+b 			= 1.016e-2; % (cm)
+m			= 1;
+n 			= 0;
+
+%% Problem 1
+fprintf('Problem 1\n\n');
+modes 	=  [ 1,0; 2,0,; 0,1; 1,1 ];
+f_c     = zeros(4,1);
+polarization = [ 'TE   '; 'TE   '; 'TE   '; 'TE,TM' ];
+	for i = 1:length(modes)
+		m = modes(i,1);
+		n = modes(i,2);
+		% General equation to calculate the cutoff frequency.
+		f_c(i)	 	= 0.5 * (1/sqrt(u_0*e_0)) * sqrt((m/a)^2 + (n/b)^2);
+		fprintf('Mode: %s           (%d,%d)\n', polarization(i,:), m, n );
+		fprintf('Cutoff Frequency:   %0.3f GHz\n',f_c(i)*1e-9);
+    end
+fprintf('\n\n');
+
+%% Problem 2
+fprintf('Problem 2\n\n');
+f           = 8e9;
+v_u         = 1/sqrt(u_0 * e_0);
+k           = sqrt(1-(f_c(1)./f).^2);
+lambda_u    = v_u/f;
+lambda_g    = lambda_u ./ k;
+etta_u      = 120*pi;
+Z           = etta_u/k;
+Z_0         = Z; % For next problem
+v_g         = k*v_u;
+fprintf('TE (1,0) Mode:\n');
+fprintf('Guided Wavelength (lambda_g): %0.3f cm\n', 1e2*lambda_g);
+fprintf('Impedence (Z):                %0.3f Ohms\n', Z);
+fprintf('Guided Velocity (V_G):        %0.3f m/s\n',v_g);
+fprintf('\n\n');
+
+%% Problem 3
+fprintf('Problem 3\n\n');
+f       = 8e9;
+a       = 2.286e-2;
+b       = 1.016e-2;
+l       = 1.63881e-2;
+Z_L     = 50;
+w       = 2*pi*f;
+B_z     = w^2 * sqrt(u_0 * e_0);
+Z_IN    = Z_0 * ((Z_L + Z_0 * 1j * tan(B_z*l))/(Z_0 + Z_L * 1j * tan(B_z * l)));
+
+fprintf('Input Impedence: (Z_in): %0.2f Ohms angle: %0.2fº\n',abs(Z_IN), degrees(angle(Z_IN)));
+fprintf('\n\n');
+
+%% Problem 4
+fprintf('Problem 4\n');
+f = 6.6e9:1e8:13e9;
+m = 1;
+n = 0;
+f_c	 	= 0.5 * (1/sqrt(u_0*e_0)) * sqrt((m/a)^2 + (n/b)^2);
+v_u         = 1/sqrt(u_0 * e_0);
+k           = sqrt(1-(f_c./f).^2);
+lambda_u    = v_u./f;
+lambda_g    = lambda_u ./ k;
+etta_u      = 120*pi;
+Z           = etta_u ./ k;
+plot(f,Z);
+title('Waveguide Impedence of the TE(1,0) mode versus Frequency.')
+legend('Z_{TE} (1,0)');
+xlabel('Frequency (GHz)');
+ylabel('Impedence (ohms)');
+grid on;
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
